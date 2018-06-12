@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoliukeji.waimai.dao.SysDao">
+	<resultMap id="findUserMap" type="com.xiaoliukeji.waimai.entity.User">
+		<result column="gk_id" property="gk_id"  />
+		<result column="gk_dlname" property="gk_dlname"  />
+		<result column="gk_dlpwd" property="gk_dlpwd"  />
+		<result column="gk_dzwz" property="gk_dzwz"  />
+		<result column="guke_xingbie" property="guke_xingbie"  />
+		<result column="guke_nianling" property="guke_nianling"  />
+		<result column="gk_phone" property="gk_phone"  />
+		<result column="gk_shnc" property="gk_shnc" />
+		<result column="gk_zsxm" property="gk_zsxm" />
+		<result column="gk_remark" property="gk_remark" />
+		<result column="gk_status" property="gk_status" />
+	</resultMap>
+	
+	<select id="findAllUser" resultType="map" >
+    select *
+    from guke 
+    </select>
+    
+    <!-- 注册  -->
+	<insert id="zhuce" useGeneratedKeys="true">
+		insert into guke
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="gk_dlname != null">
+				gk_dlname,
+			</if>
+			<if test="gk_dlpwd != null">
+				gk_dlpwd,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="gk_dlname != null">
+				#{gk_dlname,jdbcType=VARCHAR},
+			</if>
+			<if test="gk_dlpwd != null">
+				#{gk_dlpwd,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+    <select id="finduserbyname" resultMap="findUserMap" >
+    select *
+    from guke where  gk_dlname=#{gk_dlname}
+    </select>
+   	 
+</mapper>

@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoliukeji.waimai.dao.DingdanDao">
+<!-- 
+	private int order_id;
+	private String order_code;
+	private String sh_code;
+	private String order_total;
+	private String order_chuangkou;
+	private String order_des;
+	private String created;
+	private String order_status;
+	private String pay_type;
+	private String guke_dlname;
+	private String order_mjliuyan;
+	private String order_mjphone;
+	private String order_mjname;
+	private String order_mjdz;
+	private String remark;
+ -->
+ <resultMap id="orderResultMap" type="com.xiaoliukeji.waimai.entity.Order">
+		<result column="order_id" property="order_id"  />
+		<result column="order_code" property="order_code"  />
+		<result column="sh_code" property="sh_code"  />
+		<result column="order_total" property="order_total"  />
+		<result column="order_chuangkou" property="order_chuangkou"  />
+		<result column="order_des" property="order_des"  />
+		<result column="created" property="created"  />
+		<result column="order_status" property="order_status" />
+		<result column="pay_type" property="pay_type" />
+		<result column="guke_dlname" property="guke_dlname" />
+		<result column="order_mjliuyan" property="order_mjliuyan" />
+		<result column="order_mjphone" property="order_mjphone" />
+		<result column="order_mjname" property="order_mjname" />
+		<result column="order_mjdz" property="order_mjdz" />
+		<result column="remark" property="remark" />
+		
+		
+		
+	</resultMap>
+	
+ 
+	<resultMap id="gouwucheResultMap" type="com.xiaoliukeji.waimai.entity.Gouwuche">
+		<result column="gwc_id" property="gwc_id"  />
+		<result column="gk_dlname" property="gk_dlname"  />
+		<result column="wp_name" property="wp_name"  />
+		<result column="wp_code" property="wp_code"  />
+		<result column="wp_num" property="wp_num"  />
+		<result column="gwc_created" property="gwc_created"  />
+		<result column="gwc_status" property="gwc_status"  />
+		<result column="remark" property="remark" />
+		<result column="gk_xinxi" property="gk_xinxi" />
+	</resultMap>
+	
+
+
+
+	<!--生成购物车， 我就是根据菜的wp_code和名字，价格来得到购物车的 -->
+	<insert id="addgouwuche" useGeneratedKeys="true">
+		insert into gouwuche
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="gk_dlname != null">
+				gk_dlname,
+			</if>
+			<if test="wp_code != null">
+				wp_code,
+			</if>
+			<if test="wp_name != null">
+				wp_name,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="gk_dlname != null">
+				#{gk_dlname,jdbcType=VARCHAR},
+			</if>
+			<if test="wp_code != null">
+				#{wp_code,jdbcType=VARCHAR},
+			</if>
+			<if test="wp_name != null">
+				#{wp_name,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	<delete id="deletegwcbyname">
+		delete from gouwuche where gk_dlname=#{gk_dlname}
+	</delete>
+	
+	 <!-- 根据商户code，查询快递员要送的快递 -->
+	<select id="selectorder" resultMap="orderResultMap" >
+	    select *
+	    from order_waimai  where 
+	    sh_code=#{sh_code} 
+    </select>
+	
+	
+     <!-- 根据用户名查询订单 -->
+	<select id="findGouwucheByName" resultMap="gouwucheResultMap" >
+    select *
+    from gouwuche  where 
+    
+    gk_dlname=#{gk_dlname} 
+	 
+  
+    order BY ck_code;
+    </select>
+	<!--点击购买顾客填写订单信息， 插入订单 -->
+	<!-- 
+	 @Param("order_code") String order_code
+			, @Param("order_total") String order_total, @Param("order_chuangkou") String order_chuangkou
+			, @Param("order_des") String order_des,
+			 
+			
+	
+	 -->
+	<insert id="addorder"  useGeneratedKeys="true" >
+    insert into order_waimai
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="order_code  != null">
+				order_code,
+			</if>
+			<if test="sh_code  != null">
+				sh_code,
+			</if>
+			<if test="order_total != null">
+				order_total,
+			</if>
+			<if test="order_chuangkou != null">
+				order_chuangkou,
+			</if>
+			<if test="order_des != null">
+				order_des,
+			</if>
+			<if test="guke_dlname  != null">
+				guke_dlname,
+			</if>
+			<if test="order_mjliuyan != null">
+				order_mjliuyan,
+			</if>
+			<if test="order_mjphone != null">
+				order_mjphone,
+			</if>
+			<if test="order_mjname != null">
+				order_mjname,
+			</if>
+			<if test="order_mjdz != null">
+				order_mjdz,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="order_code != null">
+				#{order_code,jdbcType=VARCHAR},
+			</if>
+			<if test="order_total != null">
+				#{order_total,jdbcType=VARCHAR},
+			</if>
+			<if test="sh_code != null">
+				#{sh_code,jdbcType=VARCHAR},
+			</if>
+			<if test="order_chuangkou != null">
+				#{order_chuangkou,jdbcType=VARCHAR},
+			</if>
+			<if test="order_des != null">
+				#{order_des,jdbcType=VARCHAR},
+			</if>
+		
+			<if test="guke_dlname != null">
+				#{guke_dlname,jdbcType=VARCHAR},
+			</if>
+			<if test="order_mjliuyan != null">
+				#{order_mjliuyan,jdbcType=VARCHAR},
+			</if>
+			<if test="order_mjphone != null">
+				#{order_mjphone,jdbcType=VARCHAR},
+			</if>
+			<if test="order_mjname != null">
+				#{order_mjname,jdbcType=VARCHAR},
+			</if>
+			<if test="order_mjdz != null">
+				#{order_mjdz,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+    
+   
+    
+    
+    <!--  购物车减少物品  -->
+	<update id="jianshaowupin"  >
+	
+ 		update gouwuche
+		<set>
+			<if test="wp_num != null">
+				wp_num = #{wp_num},
+			</if>
+		</set>
+		where wp_code = #{wp_code}
+		and gk_dlname=#{gk_dlname}
+	</update>
+    <!--  购物车增加物品  -->
+	<update id="zengjiawupin"  >
+	
+ 		update gouwuche
+		<set>
+			<if test="wp_num != null">
+				wp_num = #{wp_num},
+			</if>
+		</set>
+		where wp_code = #{wp_code}
+		and gk_dlname=#{gk_dlname}
+	</update>
+    
+    <!--  购物车增加物品  -->
+	<update id="upgwcxinxi"  >
+	
+ 		update gouwuche
+		<set>
+			<if test="gk_xinxi != null">
+				gk_xinxi = #{gk_xinxi},
+			</if>
+		</set>
+		where gk_dlname = #{gk_dlname}
+	</update>
+    
+    
+    
+    <!-- 根据用户名查询订单 -->
+	<select id="chadizhi" resultType="map" >
+    select *
+    from order_waimai  where gk_dlname=#{gk_dlname}
+    </select>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</mapper>

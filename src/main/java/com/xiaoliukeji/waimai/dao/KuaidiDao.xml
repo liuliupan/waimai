@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoliukeji.waimai.dao.KuaidiDao">
+
+	<resultMap id="shanghuResultMap" type="com.xiaoliukeji.waimai.entity.Shanghu">
+		<result column="sh_id" property="sh_id"  />
+		<result column="sh_name" property="sh_name"  />
+		<result column="sh_daima" property="sh_daima"  />
+		<result column="sh_location" property="sh_location"  />
+		<result column="sh_jingdu" property="sh_jingdu"  />
+		<result column="sh_weidu" property="sh_weidu"  />
+		<result column="sh_jingwei" property="sh_jingwei"  />
+		<result column="sh_remark" property="sh_remark" />
+	</resultMap>
+ 
+ <resultMap id="chuangkouResultMap" type="com.xiaoliukeji.waimai.entity.Chuangkou">
+		<result column="ck_id" property="ck_id"  />
+		<result column="lc_id" property="lc_id"  />
+		<result column="ck_bianma" property="ck_bianma"  />
+		<result column="ck_ckname" property="ck_ckname"  />
+		<result column="ck_bossname" property="ck_bossname"  />
+		<result column="ck_bossphone" property="ck_bossphone"  />
+		<result column="ck_bosssex" property="ck_bosssex"  />
+		<result column="ck_bossage" property="ck_bossage" />
+		<result column="ck_remark" property="ck_remark" />
+	</resultMap>
+
+	<resultMap id="gouwucheResultMap" type="com.xiaoliukeji.waimai.entity.Gouwuche">
+		<result column="gwc_id" property="gwc_id"  />
+		<result column="gk_dlname" property="gk_dlname"  />
+		<result column="wp_name" property="wp_name"  />
+		<result column="wp_code" property="wp_code"  />
+		<result column="wp_num" property="wp_num"  />
+		<result column="gwc_created" property="gwc_created"  />
+		<result column="gwc_status" property="gwc_status"  />
+		<result column="remark" property="remark" />
+		
+	</resultMap>
+	<!-- 根据窗口号码查询窗口的名字 -->
+	<select id="chuangkouname" resultMap="chuangkouResultMap" >
+    select *
+    from shanghu_chuangkou  where ck_bianma=#{ck_bianma}
+    </select>
+	<!-- 根据商户号码查询商户的名字 -->
+	<select id="shanghuname" resultMap="shanghuResultMap" >
+    select *
+    from shanghu  where sh_daima=#{sh_daima}
+    </select>
+
+     <!-- 根据用户名查询订单 -->
+	<select id="kuaidibuy" resultMap="gouwucheResultMap" >
+    select *
+    from gouwuche  where sh_code=#{sh_code} and gwc_status='2' or gwc_status='3' or gwc_status='4'
+    </select>
+    <!--  购买  -->
+	<update id="goumai"  >
+	
+ 		update order_waimai
+		<set>
+			<if test="order_status != null">
+				order_status = #{order_status},
+			</if>
+			<if test="kdy_name != null">
+				kdy_name = #{kdy_name},
+			</if>
+		</set>
+		where order_id = #{order_id}
+	</update>
+    
+    <!--  购买  -->
+	<update id="goumaibangding"  >
+	
+ 		update gouwuche
+		<set>
+			<if test="kdy_name != null">
+				kdy_name = #{kdy_name},
+			</if>
+		</set>
+		where gwc_id = #{gwc_id}
+	</update>
+    
+</mapper>

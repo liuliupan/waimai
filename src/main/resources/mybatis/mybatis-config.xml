@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings>
+		<setting name="cacheEnabled" value="true" /><!-- 全局映射器启用缓存 -->
+        <setting name="logImpl" value="LOG4J"/>
+        <setting name="callSettersOnNulls" value="true"/> <!-- 设置字段为空时依然映射返回 -->
+    </settings>
+ 	<!-- 分页插件 -->
+	
+</configuration>

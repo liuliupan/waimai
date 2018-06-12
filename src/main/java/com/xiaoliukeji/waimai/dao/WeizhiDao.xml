@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoliukeji.waimai.dao.WeizhiDao">
+
+<resultMap id="dazhidianResultMap" type="com.xiaoliukeji.waimai.entity.Dazhidian">
+		<result column="zhenjie_id" property="zhenjie_id"  />
+		<result column="point_name" property="point_name"  />
+		<result column="point_code" property="point_code"  />
+		<result column="point_jingwei" property="point_jingwei"  />
+		<result column="point_status" property="point_status"  />
+		<result column="point_dizhi" property="point_dizhi"  />
+		<result column="point_beizhu" property="point_beizhu"  />
+	</resultMap>
+	
+<resultMap id="loudongResultMap" type="com.xiaoliukeji.waimai.entity.ShanghuLoudong">
+		<result column="sh_id" property="sh_id"  />
+		<result column="sh_name" property="sh_name"  />
+		<result column="sh_daima" property="sh_daima"  />
+		<result column="sh_location" property="sh_location"  />
+		<result column="sh_jingdu" property="sh_jingdu"  />
+		<result column="sh_weidu" property="sh_weidu"  />
+		<result column="sh_jingwei" property="sh_jingwei"  />
+		<result column="sh_remark" property="sh_remark"  />
+		
+	</resultMap>
+<!-- 查区县 -->
+	<select id="findAllQuxian" resultType="map" >
+    select *
+    from system_district  where city_id=#{city_id}
+    </select>
+ <!-- 查街道 -->   
+   	 <select id="findAllJiedao" resultType="map" >
+    select *
+    from system_zhenjie where zhenjie_code like  CONCAT(#{qucode},'%') ;<!-- #{quid}+"%"  -->
+    </select>
+    <!-- 查大致点的位置 -->
+    <select id="findAllDazhidian" resultType="map" >
+    select *
+    from system_point where point_code like  CONCAT(#{jiedaocode},'%') ;<!-- #{quid}+"%"  -->
+    </select>
+    <!-- 查定位点的经纬度 -->
+	<select id="findDingweiDetail" resultMap="dazhidianResultMap" >
+    select *
+    from system_point  where point_code=#{point_code}
+    </select>
+    
+    <!-- 查看附近的商家（楼栋） -->
+    <select id="findFujinShanghu" resultMap="loudongResultMap" >
+    select *
+    from shanghu where sh_jingdu between #{0}-0.02 and #{0}+0.02
+    	and sh_weidu between #{1}-0.02 and #{1}+0.02 ;
+    </select>
+    <!-- 查看附近的商家（窗口） -->
+    <select id="findFujinChuangkou" resultType="map" >
+    select *
+    from shanghu_chuangkou where ck_bianma like  CONCAT(#{loudongcode},'%') ;
+    </select>
+    
+    <!-- 根据窗口编号查询菜单  -->
+    <select id="findCaidanByCk" resultType="map" >
+    select *
+    from shanghu_wuping where wp_code like  CONCAT(#{ckcode},'%') ;
+    </select>
+    
+     <!--  更新顾客的大致位置  -->
+	<update id="gukedazhiweizhi"  >
+	
+ 		update guke
+		<set>
+			<if test="gk_wzcode != null">
+				gk_wzcode = #{gk_wzcode},
+			</if>
+			<if test="gk_dzwz != null">
+				gk_dzwz = #{gk_dzwz},
+			</if>
+		</set>
+		where gk_dlname = #{gk_dlname}
+	</update>
+    
+</mapper>
